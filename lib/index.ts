@@ -23,3 +23,96 @@
  *
  * @LICENSE_HEADER_END@
  */
+
+function roundToLines(offset: number, line: number): number {
+    return (((offset / line)|0) * line) - offset;
+}
+
+export class HexFormatter {
+    offsetColumnSize: number  = 5;
+    bytesPerLine:     number  = 16;
+    printCharacters:  boolean = true;
+    aligned:          boolean = true;
+
+    constructor() {
+    }
+
+    offsetAsHexString(o: number): string {
+        let   h = o.toString(16).toUpperCase();
+        const l = this.offsetColumnSize;
+
+        while (h.length < l)
+            h = "0" + h;
+
+        return h;
+    }
+
+    byteAsHexString(b: number): string {
+        if (b < 16)
+            return "0" + b.toString(16).toUpperCase();
+        else
+            return b.toString(16).toUpperCase();
+    }
+
+    format(data: Uint8Array | DataView | ArrayBuffer | Buffer, baseOffset: number = 0): string[] {
+        let lines: string[] = [];
+
+        if (data instanceof DataView)
+            data = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+        else if (data instanceof ArrayBuffer)
+            data = new Uint8Array(data);
+        else if (Buffer.isBuffer(data))
+            data = new Uint8Array(data.buffer, data.byteOffset, data.byteOffset);
+
+        const aligned         = this.aligned;
+        const dataByteLength  = data.byteLength;
+        const bytesPerLine    = this.bytesPerLine;
+        const printCharacters = this.printCharacters;
+
+        baseOffset += data.byteOffset;
+
+        let o = 0;
+
+        if (aligned)
+            o = roundToLines(baseOffset, bytesPerLine);
+
+        for (; o < dataByteLength; o += bytesPerLine) {
+            let line  = this.offsetAsHexString(baseOffset + o) + ":";
+            let eol   = Math.min(dataByteLength, o + bytesPerLine);
+            let chars = "";
+            let i     = o;
+
+            for (; i < eol; i++) {
+                if (i < 0) {
+                    line += "   ";
+
+                    if (printCharacters)
+                        chars += " ";
+
+                    continue;
+                }
+
+                const byte = data[i];
+
+                line += " " + this.byteAsHexString(byte);
+
+                if (printCharacters) {
+                    if (byte <= 32 || byte >= 127)
+                        chars += ".";
+                    else
+                        chars += String.fromCharCode(byte);
+                }
+            }
+
+            for (; i < o + bytesPerLine; i++)
+                line += "   ";
+
+            if (printCharacters)
+                line += "  " + chars;
+
+            lines.push(line);
+        }
+
+        return lines;
+    }
+}
