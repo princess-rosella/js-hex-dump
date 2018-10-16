@@ -1,0 +1,28 @@
+{
+  "name": "js-hex-dump",
+  "version": "0.0.1",
+  "description": "JavaScript ArrayBuffer to Hex formatter",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p lib.tsconfig.json",
+    "test": "tsc -p tests.tsconfig.json && node tests.out/tests/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/princess-rosella/js-hex-dump.git"
+  },
+  "keywords": [
+    "hex",
+    "typescript"
+  ],
+  "author": "Princess Rosella of Daventry",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/princess-rosella/js-hex-dump/issues"
+  },
+  "homepage": "https://github.com/princess-rosella/js-hex-dump#readme",
+  "dependencies": {
+    "typescript": "^3.1.3"
+  }
+}
