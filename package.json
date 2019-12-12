@@ -1,6 +1,6 @@
 {
   "name": "spu-hex-dump",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "JavaScript ArrayBuffer to Hex formatter",
   "main": "index.js",
   "types": "index.d.ts",
@@ -24,6 +24,6 @@
   "homepage": "https://github.com/princess-rosella/spu-hex-dump#readme",
   "devDependencies": {
     "@types/node": "^10.12.0",
-    "typescript": "^3.1.0"
+    "typescript": "^3.7.0"
   }
 }

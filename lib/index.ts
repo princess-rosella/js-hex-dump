@@ -54,15 +54,16 @@ export class HexFormatter {
             return b.toString(16).toUpperCase();
     }
 
-    format(data: Uint8Array | DataView | ArrayBuffer | Buffer, baseOffset: number = 0): string[] {
+    format(data: Uint8Array | DataView | ArrayBuffer, baseOffset: number = 0): string[] {
         let lines: string[] = [];
 
         if (data instanceof DataView)
             data = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
         else if (data instanceof ArrayBuffer)
             data = new Uint8Array(data);
-        else if (Buffer.isBuffer(data))
-            data = new Uint8Array(data.buffer, data.byteOffset, data.byteOffset);
+
+        if (!(data instanceof Uint8Array))
+            throw new Error(`Expected a Uint8Array, a DataView or an ArrayBuffer. Received ${data.constructor.name}`);
 
         const aligned         = this.aligned;
         const dataByteLength  = data.byteLength;
